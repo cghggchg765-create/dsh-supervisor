@@ -1,0 +1,69 @@
+{
+  "name": "@deepseek-ai/dsh-supervisor",
+  "description": "Supervised-terminal control plane for unattended long tasks: hosts external CLI agents in terminals, derives deterministic stall evidence from their output, and keeps plans, checkpoints, and reports durable across model turns. Six independently switchable components ship together: the terminal core, planning and durable task state, orchestration, operations, automatic pacing, and automatic shutdown.",
+  "version": "0.1.7-rc.1",
+  "icon": "./icon.svg",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+    "directory": "packages/supervisor/supervisor"
+  },
+  "type": "module",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./src/*": "./src/*",
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "files": [
+    "icon.svg",
+    "locale/*.json",
+    "lib/index.js",
+    "cordis.patch.yml",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@deepseek-ai/dsh-supervisor-core": "workspace:*",
+    "@deepseek-ai/dsh-supervisor-ops": "workspace:*",
+    "@deepseek-ai/dsh-supervisor-orchestration": "workspace:*",
+    "@deepseek-ai/dsh-supervisor-pacing": "workspace:*",
+    "@deepseek-ai/dsh-supervisor-shutdown": "workspace:*",
+    "@deepseek-ai/dsh-supervisor-tasks": "workspace:*"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "workspace:~"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "workspace:~",
+    "@deepseek-ai/dsh-agent": "workspace:*",
+    "@deepseek-ai/dsh-app-boot": "workspace:*",
+    "@deepseek-ai/dsh-bash-local": "workspace:*",
+    "@deepseek-ai/dsh-llm": "workspace:*",
+    "@deepseek-ai/dsh-loader-smoke": "workspace:*",
+    "@deepseek-ai/dsh-session": "workspace:*",
+    "@deepseek-ai/dsh-session-projection": "workspace:*",
+    "@deepseek-ai/dsh-subprocess-local": "workspace:*",
+    "@deepseek-ai/dsh-supervisor-core": "workspace:*",
+    "@deepseek-ai/dsh-system-prompt": "workspace:*",
+    "@deepseek-ai/dsh-terminal-bash": "workspace:*",
+    "@deepseek-ai/dsh-terminal": "workspace:*",
+    "@deepseek-ai/dsh-tool-terminal": "workspace:*",
+    "@deepseek-ai/dsh-tools": "workspace:*",
+    "js-yaml": "^4.2.0"
+  }
+}

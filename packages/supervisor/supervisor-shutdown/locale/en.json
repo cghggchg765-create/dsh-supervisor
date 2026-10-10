@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Automatic shutdown",
+    "description": "Runs the operator's shutdown command once the run is over: a wall-clock or countdown timer, a watcher that fires when every task plan finished, an idle timeout, chat reminders before the deadline, a cancel path, and a dry run that only reports what it would run."
+  }
+}

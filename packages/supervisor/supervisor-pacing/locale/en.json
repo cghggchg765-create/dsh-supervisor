@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Automatic pacing",
+    "description": "Keeps the supervising agent alive across provider failures: after its own model request fails, it waits out the provider's stated reset or a bounded backoff, re-arms a goal that the failure disarmed, and wakes the agent for one more turn — within a per-session budget, and alerting a chat channel when it gives up."
+  }
+}

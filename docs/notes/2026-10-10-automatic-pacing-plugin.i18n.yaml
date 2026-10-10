@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write docs/notes/2026-10-10-automatic-pacing-plugin.md
+2026-10-10-automatic-pacing-plugin.md: 3037a486e5488e4b0ceb0578cb3106d6da2700b3
+2026-10-10-automatic-pacing-plugin.zh.md: 0b6f414dbf3211550987098cc54aa13ab57193f6

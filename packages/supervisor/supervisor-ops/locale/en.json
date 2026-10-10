@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Budget, reports and notifications",
+    "description": "Watches the cost and the humans around a run: usage budget with per-model price tables and downgrade-or-stop actions, delivery reports assembled from plans, checkpoints, and diffs, chat-channel notifications, and a safe shutdown gate."
+  }
+}

@@ -1,0 +1,1 @@
+[supervisor] terminal {sessionId} hit a usage limit that should have reset by now. Send a follow-up instruction to resume the task, or read the terminal first if the CLI left a dialog open.

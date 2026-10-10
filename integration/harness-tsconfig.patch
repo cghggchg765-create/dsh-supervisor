@@ -1,0 +1,36 @@
+diff --git a/tsconfig.base.json b/tsconfig.base.json
+index 8b15b0bb7c..50908c56b2 100644
+--- a/tsconfig.base.json
++++ b/tsconfig.base.json
+@@ -485,6 +485,13 @@
+       "@deepseek-ai/dsh-subprocess": ["./packages/subprocess/subprocess/src"],
+       "@deepseek-ai/dsh-subprocess-local": ["./packages/subprocess/subprocess-local/src"],
+       "@deepseek-ai/dsh-subprocess-ssh": ["./packages/ssh/subprocess-ssh/src"],
++      "@deepseek-ai/dsh-supervisor": ["./packages/supervisor/supervisor/src"],
++      "@deepseek-ai/dsh-supervisor-core": ["./packages/supervisor/supervisor-core/src"],
++      "@deepseek-ai/dsh-supervisor-ops": ["./packages/supervisor/supervisor-ops/src"],
++      "@deepseek-ai/dsh-supervisor-orchestration": ["./packages/supervisor/supervisor-orchestration/src"],
++      "@deepseek-ai/dsh-supervisor-pacing": ["./packages/supervisor/supervisor-pacing/src"],
++      "@deepseek-ai/dsh-supervisor-shutdown": ["./packages/supervisor/supervisor-shutdown/src"],
++      "@deepseek-ai/dsh-supervisor-tasks": ["./packages/supervisor/supervisor-tasks/src"],
+       "@deepseek-ai/dsh-system-prompt": ["./packages/core/system-prompt/src"],
+       "@deepseek-ai/dsh-system-prompt/invariant": ["./packages/core/system-prompt/src/invariant.ts"],
+       "@deepseek-ai/dsh-terminal": ["./packages/terminal/terminal/src"],
+diff --git a/tsconfig.host.json b/tsconfig.host.json
+index 2d31d0df31..d0afbf8c81 100644
+--- a/tsconfig.host.json
++++ b/tsconfig.host.json
+@@ -335,6 +335,13 @@
+     { "path": "./packages/ssh/sandbox-ssh" },
+     { "path": "./packages/subprocess/win32-process" },
+     { "path": "./packages/shell/shell" },
++    { "path": "./packages/supervisor/supervisor" },
++    { "path": "./packages/supervisor/supervisor-core" },
++    { "path": "./packages/supervisor/supervisor-tasks" },
++    { "path": "./packages/supervisor/supervisor-orchestration" },
++    { "path": "./packages/supervisor/supervisor-ops" },
++    { "path": "./packages/supervisor/supervisor-pacing" },
++    { "path": "./packages/supervisor/supervisor-shutdown" },
+     { "path": "./packages/terminal/terminal" },
+     { "path": "./packages/terminal/terminal-bash" },
+     { "path": "./packages/shell/tool-bash-persistent" },

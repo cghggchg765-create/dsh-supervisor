@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Supervised terminals",
+    "description": "Unattended long tasks, supervised end to end: hosts external CLI agents in terminals, derives deterministic stall evidence from their output, and keeps plans, checkpoints, and reports durable across model turns. Six components ship together — terminal core, task planning, orchestration, operations, automatic pacing, and automatic shutdown — and each one can be switched off on its own."
+  }
+}

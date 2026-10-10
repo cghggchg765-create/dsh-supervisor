@@ -1,0 +1,5 @@
+# The payload's canonical text form is LF on every host. It is copied into a
+# harness checkout whose byte-level gates compare the copied files against the
+# repository form, so a CRLF working tree would break that comparison.
+* text=auto eol=lf
+*.cmd text eol=crlf

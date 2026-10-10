@@ -1,0 +1,1 @@
+[supervisor] terminal {sessionId} produced no output for {ageSec}s (timeout {timeoutSec}s, last wait reason "{waitReason}", task {taskId}). Read it with supervisor_terminal_read and decide whether to answer a prompt, interrupt it, or take a checkpoint.

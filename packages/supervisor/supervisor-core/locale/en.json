@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Supervised terminal core",
+    "description": "Hosts CLI agents in terminals and turns their output into evidence: one supervised-session registry, the detection pipeline that derives state marks and L1 rule hits, heartbeats, output logs, the task-plan store, and the watchdog that wakes an idle agent when a terminal goes quiet."
+  }
+}

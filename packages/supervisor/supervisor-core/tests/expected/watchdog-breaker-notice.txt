@@ -1,0 +1,1 @@
+ Its progress breaker is OPEN after {noProgress} identical settlements (open for {openForSec}s): the terminal is repeating itself, so consider a different instruction, a fresh terminal, or a human decision.

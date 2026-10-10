@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Orchestration and model switching",
+    "description": "Keeps long runs moving: per-agent skill inventories with matching, phase-based model switching through the hosted CLI, git worktrees that isolate parallel subtasks, and bounded parallel dispatch."
+  }
+}

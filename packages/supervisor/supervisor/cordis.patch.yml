@@ -1,0 +1,20 @@
+# This optional profile layer mounts the supervised-terminal control plane as
+# six independently switchable components. A composition that mounts it needs a
+# terminal backend as well; opening a terminal stays with the harness terminal
+# tools, so this bundle never creates a session itself. Each row keeps its own
+# row id, so a profile patch can configure or disable one component without
+# restating the others.
+
+- insert:
+    - id: supervisor
+      name: '@deepseek-ai/dsh-supervisor-core'
+    - id: supervisor-tasks
+      name: '@deepseek-ai/dsh-supervisor-tasks'
+    - id: supervisor-orchestration
+      name: '@deepseek-ai/dsh-supervisor-orchestration'
+    - id: supervisor-ops
+      name: '@deepseek-ai/dsh-supervisor-ops'
+    - id: supervisor-pacing
+      name: '@deepseek-ai/dsh-supervisor-pacing'
+    - id: supervisor-shutdown
+      name: '@deepseek-ai/dsh-supervisor-shutdown'

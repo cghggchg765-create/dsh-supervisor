@@ -1,0 +1,35 @@
+# Minimal orchestration composition: the real app boot path, the real terminal
+# service with a scripted backend the driver registers, the supervisor control
+# plane, the task services, and the orchestration plugin driven through the tool
+# registry. No model and no external CLI runs.
+- id: system-prompt
+  name: '@deepseek-ai/dsh-system-prompt'
+
+- id: tools
+  name: '@deepseek-ai/dsh-tools'
+
+- id: agents
+  name: '@deepseek-ai/dsh-agent'
+
+- id: sessions
+  name: '@deepseek-ai/dsh-session'
+
+- id: terminals
+  name: '@deepseek-ai/dsh-terminal'
+
+- id: supervisor
+  name: '@deepseek-ai/dsh-supervisor-core'
+  config:
+    workspaceDir: .
+    stateDir: ./state
+    watchdogEnabled: false
+
+- id: supervisor-tasks
+  name: '@deepseek-ai/dsh-supervisor-tasks'
+
+- id: supervisor-orchestration
+  name: '@deepseek-ai/dsh-supervisor-orchestration'
+  config:
+    skillRoots:
+      homeDir: ./home
+      workspaceDir: ./skills

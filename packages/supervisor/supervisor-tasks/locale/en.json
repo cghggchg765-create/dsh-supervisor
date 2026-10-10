@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Task plans and checkpoints",
+    "description": "Turns a reviewed plan into durable state: plan authoring that rejects subtask cycles, git checkpoints with retention and restartable branches, and review tickets that carry blocking findings into a redo brief."
+  }
+}

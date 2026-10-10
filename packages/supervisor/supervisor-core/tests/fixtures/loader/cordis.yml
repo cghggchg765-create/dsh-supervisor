@@ -1,0 +1,24 @@
+# Minimal supervisor-core composition: the real app boot path, the real terminal
+# service with a scripted backend the driver registers, and the control-plane
+# core driven through the tool registry. No model and no external CLI runs.
+- id: system-prompt
+  name: '@deepseek-ai/dsh-system-prompt'
+
+- id: tools
+  name: '@deepseek-ai/dsh-tools'
+
+- id: agents
+  name: '@deepseek-ai/dsh-agent'
+
+- id: sessions
+  name: '@deepseek-ai/dsh-session'
+
+- id: terminals
+  name: '@deepseek-ai/dsh-terminal'
+
+- id: supervisor
+  name: '@deepseek-ai/dsh-supervisor-core'
+  config:
+    workspaceDir: .
+    stateDir: ./state
+    watchdogEnabled: false

@@ -1,0 +1,1 @@
+[pacing] the previous turn failed. This is automatic resume {resume} of {max}: continue the work from where it stopped, and if it cannot continue, report what remains instead of retrying.

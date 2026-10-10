@@ -1,0 +1,63 @@
+# Integration check: mount this repository's payload into a DeepSeek Harness
+# checkout at the matching tag and run the payload's tests and the harness
+# workspace constraints there. The clone is shallow and keyless; no model API
+# is reachable from any step.
+
+name: Integration
+
+on:
+  workflow_dispatch:
+  push:
+    # The default branch; change this name if the repository uses another.
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  integration:
+    name: Payload against dsh-v0.1.7-rc.1
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      HARNESS_TAG: dsh-v0.1.7-rc.1
+      HARNESS_DIR: ${{ runner.temp }}/harness
+    steps:
+      - name: Check out this repository
+        uses: actions/checkout@v7
+
+      # No `version` input: the action installs the pnpm pinned by the
+      # `packageManager` field in package.json.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Clone the harness at the pinned tag
+        run: |
+          git clone --depth 1 --branch "$HARNESS_TAG" \
+            https://github.com/deepseek-ai/deepseek-harness.git "$HARNESS_DIR"
+
+      - name: Copy the payload into the harness checkout
+        run: |
+          mkdir -p "$HARNESS_DIR/packages/supervisor"
+          cp -R packages/supervisor/. "$HARNESS_DIR/packages/supervisor/"
+
+      - name: Register the payload in the harness TypeScript project
+        working-directory: ${{ runner.temp }}/harness
+        run: git apply "$GITHUB_WORKSPACE/integration/harness-tsconfig.patch"
+
+      - name: Install
+        working-directory: ${{ runner.temp }}/harness
+        run: pnpm install
+
+      - name: Run the payload tests
+        working-directory: ${{ runner.temp }}/harness
+        run: pnpm exec vitest run packages/supervisor
+
+      - name: Run the harness workspace constraints
+        working-directory: ${{ runner.temp }}/harness
+        run: pnpm run constraints

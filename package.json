@@ -1,0 +1,15 @@
+{
+  "name": "dsh-supervisor",
+  "version": "0.1.7-rc.1",
+  "description": "Supervised-terminal control plane for the DeepSeek Harness, shipped as an in-tree overlay: one bundle, six independently switchable components.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": "^22.19 || >=24"
+  },
+  "packageManager": "pnpm@11.7.0",
+  "scripts": {
+    "integration": "node scripts/integration.mjs"
+  }
+}

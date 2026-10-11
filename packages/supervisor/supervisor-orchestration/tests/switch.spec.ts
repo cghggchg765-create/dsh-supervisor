@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   TASK_PHASES,
+  isSwitchableModelName,
   modelsForPhase,
   renderSwitchCommand,
   resolveModelRules,
@@ -104,5 +105,17 @@ describe('switch commands', () => {
 
   it('returns no command for an empty candidate list', () => {
     expect(switchCommands('/model {model}', [])).toEqual([])
+  })
+
+  it('skips a candidate carrying a control character so it cannot break out of the command line', () => {
+    expect(switchCommands('/model {model}', ['sonnet\n!rm -rf /'])).toEqual([])
+    expect(switchCommands('/model {model}', ['ok', 'bad\rname', 'worse\u001b[2J'])).toEqual(['/model ok'])
+  })
+
+  it('vets one model name for in-session substitution', () => {
+    expect(isSwitchableModelName(' deepseek-v4 ')).toBe(true)
+    expect(isSwitchableModelName('')).toBe(false)
+    expect(isSwitchableModelName('  ')).toBe(false)
+    expect(isSwitchableModelName('bad\nname')).toBe(false)
   })
 })

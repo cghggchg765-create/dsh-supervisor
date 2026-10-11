@@ -182,7 +182,17 @@ export function apply(ctx: Context, config: ShutdownConfig = {}): void {
 
   /** Ask the gate about one attempt and, when it allows, run the command. */
   const attempt = async (armed: PendingShutdown): Promise<void> => {
-    const decision = shutdownDecision(policy(), armed.trigger, Date.now(), armed.since)
+    let decision: ShutdownDecision
+    try {
+      decision = await askGate(armed.trigger, armed.since)
+    } catch (error: unknown) {
+      // The `all-tasks-completed` gate reads the stored plans, which can fail
+      // (storage error, concurrent removal). Refuse the attempt here rather than
+      // let the rejection escape this timer callback, where it would become an
+      // unhandled rejection that can take the process down.
+      announce(`attempt abandoned (${armed.detail}): could not read the stored plans: ${String(error)}`)
+      return
+    }
     if (!decision.allowed) {
       announce(`attempt refused (${armed.detail}): ${decision.reason}`)
       return
@@ -228,9 +238,25 @@ export function apply(ctx: Context, config: ShutdownConfig = {}): void {
     return await runCommand(settings.cancelCommand, 'cancellation')
   }
 
-  /** Whether the gate would allow one trigger right now. */
-  const preview = (trigger: ShutdownTrigger, since?: number): ShutdownDecision =>
-    shutdownDecision(policy(), trigger, Date.now(), since)
+  /** Task ids whose stored plan still has a subtask that is neither completed nor skipped — the operations gate's own notion of unfinished work. */
+  const unfinishedTasks = async (): Promise<string[]> =>
+    (await planProgress(await supervisor.plans.list())).filter(plan => plan.unfinished > 0).map(plan => plan.taskId)
+
+  /**
+   * Ask the operations gate about one trigger. A claimed `all-tasks-completed`
+   * is verified against the stored plans first, so every path that consults the
+   * gate — the `supervisor_power` tool and the moment an armed attempt fires —
+   * applies the same rule the operations component's `supervisor_shutdown` does.
+   */
+  const askGate = async (trigger: ShutdownTrigger, since?: number): Promise<ShutdownDecision> => {
+    if (trigger === 'all-tasks-completed') {
+      const unfinished = await unfinishedTasks()
+      if (unfinished.length > 0) {
+        return { allowed: false, reason: `the stored plans still have unfinished work: ${unfinished.join(', ')}` }
+      }
+    }
+    return shutdownDecision(policy(), trigger, Date.now(), since)
+  }
 
   /** One watcher pass: plan completion, idle timeout, and the reminders owed. */
   const watch = async (): Promise<void> => {
@@ -267,6 +293,11 @@ export function apply(ctx: Context, config: ShutdownConfig = {}): void {
     }
   }
 
+  /** Log a watcher failure instead of letting the rejection escape the interval callback as an unhandled rejection. */
+  const onWatchError = (error: unknown): void => {
+    logger.info(`supervisor-shutdown: watcher pass failed: ${String(error)}`)
+  }
+
   /** The model-visible projection of one armed attempt. */
   const armedResult = (armed: PendingShutdown, decision: ShutdownDecision) => ({
     pending: true,
@@ -294,12 +325,12 @@ export function apply(ctx: Context, config: ShutdownConfig = {}): void {
       arm('scheduled-time', settings.scheduledAt, `the configured wall clock ${config.scheduleAt ?? ''}`.trim())
     }
     const poll = setInterval(() => {
-      void watch()
+      void watch().catch(onWatchError)
     }, settings.pollIntervalMs)
     ctx.effect(() => () => {
       clearInterval(poll)
     }, 'supervisor-shutdown watcher')
-    void watch()
+    void watch().catch(onWatchError)
   }
 
   ctx.tools.register(defineTool({
@@ -349,7 +380,7 @@ export function apply(ctx: Context, config: ShutdownConfig = {}): void {
         }
       }
       if (args.action === 'confirm') {
-        const decision = preview('all-tasks-completed')
+        const decision = await askGate('all-tasks-completed')
         if (!decision.allowed) return { pending: false, allowed: false, reason: decision.reason }
         const since = Date.now()
         const armed = arm('all-tasks-completed', since + policy().gracePeriodMin * MINUTE_MS, 'the supervising model confirmed the work is done', since)
@@ -360,12 +391,12 @@ export function apply(ctx: Context, config: ShutdownConfig = {}): void {
         if (minutes === undefined || !Number.isFinite(minutes) || minutes <= 0) {
           throw new Error('supervisor_power schedule needs `minutes`, a positive whole number')
         }
-        const decision = preview('scheduled-time')
+        const decision = await askGate('scheduled-time')
         if (!decision.allowed) return { pending: false, allowed: false, reason: decision.reason }
         const armed = arm('scheduled-time', Date.now() + minutes * MINUTE_MS, `scheduled for ${String(minutes)} minute(s) from now`)
         return armedResult(armed, decision)
       }
-      const decision = preview(pending?.trigger ?? 'scheduled-time', pending?.since)
+      const decision = await askGate(pending?.trigger ?? 'scheduled-time', pending?.since)
       if (pending === undefined) {
         return {
           pending: false,

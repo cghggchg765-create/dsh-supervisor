@@ -87,7 +87,27 @@ export function modelsForPhase(phase: TaskPhase, rules: readonly ResolvedModelRu
 }
 
 /**
- * Substitute `{model}` into one in-session switch command template.
+ * Characters that would let one substituted model break out of a single
+ * in-session command line — C0/C1 controls (newline, carriage return, tab,
+ * escape) and the Unicode line separators. A model name never carries one.
+ */
+const UNSAFE_MODEL_CHARACTER = /[\u0000-\u001f\u007f-\u009f\u2028\u2029]/
+
+/**
+ * Whether one model name can be substituted into an in-session switch command:
+ * non-empty after trimming and free of control characters.
+ * @param model - model name to vet.
+ * @returns true when the name is safe to substitute.
+ */
+export function isSwitchableModelName(model: string): boolean {
+  const candidate = model.trim()
+  return candidate !== '' && !UNSAFE_MODEL_CHARACTER.test(candidate)
+}
+
+/**
+ * Substitute `{model}` into one in-session switch command template. The caller
+ * must pass a validated single-line model; {@link switchCommands} enforces that
+ * every candidate it substitutes carries no control character.
  * @param template - configured switch command.
  * @param model - model name to substitute.
  * @returns the command text with every placeholder replaced.
@@ -99,7 +119,9 @@ export function renderSwitchCommand(template: string, model: string): string {
 /**
  * Commands to try for one model switch, most preferred first. Returns an empty
  * array when the CLI has no in-session switch command (the caller relaunches).
- * Templates are trimmed and internal whitespace is collapsed.
+ * Templates are trimmed and internal whitespace is collapsed. A candidate that
+ * carries a control character is skipped, so one substituted model cannot break
+ * out of a single in-session command line.
  * @param template - configured switch command, or undefined when the CLI has none.
  * @param models - candidate models, most preferred first.
  * @returns the distinct non-empty commands, in candidate order.
@@ -110,7 +132,7 @@ export function switchCommands(template: string | undefined, models: readonly st
   const commands: string[] = []
   for (const model of models) {
     const candidate = model.trim()
-    if (candidate === '') continue
+    if (!isSwitchableModelName(candidate)) continue
     const command = renderSwitchCommand(normalized, candidate)
     if (command === '' || commands.includes(command)) continue
     commands.push(command)

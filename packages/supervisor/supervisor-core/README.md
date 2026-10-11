@@ -45,7 +45,7 @@ A profile patch targets the row id `supervisor` and replaces the whole `config`,
 | `worktreeBase` | `.worktrees` | Directory per-subtask worktrees are created under; a relative path resolves against `workspaceDir`. Read by the orchestration component. |
 | `agents` | built-in templates | Per-agent-kind `startCommand`, `resumeCommand`, and `modelSwitchCommand`, merged over the defaults for `claude-code`, `codex`, `kimi-code`, `qwen-code`, `trae`, and `dsh`. |
 | `defaultProfile` | `headless` | Value substituted for `{profile}`, which the `dsh` template uses. |
-| `shellQuoting` | `posix` (`powershell` on Windows) | Dialect used to quote substituted `{prompt}` and extra arguments. |
+| `shellQuoting` | `posix` (`powershell` on Windows) | Dialect used to quote substituted `{model}`, `{prompt}`, and `{profile}` values and extra arguments. |
 | `rules` | every built-in rule | Per-rule `enabled`, `severity`, and — for `goal-drift-signal` — literal `keywords`. |
 | `detection` | see below | Thresholds for the window rules and for the `contextBloatBytes` bound on `context-bloat`. |
 | `breaker` | `noProgressLimit` 2, `openLimit` 3, `cooldownSec` 300 | Per-session progress-breaker limits; `openLimit` must be at least `noProgressLimit`. |

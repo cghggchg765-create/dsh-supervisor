@@ -26,7 +26,7 @@ import {
 } from '@deepseek-ai/dsh-supervisor-core'
 import type { GitRunner } from '@deepseek-ai/dsh-supervisor-tasks'
 import { matchAgents, renderSkillBrief, scanSkills, type SkillInventory, type SkillScanRoots, type SkillStore } from './skills.ts'
-import { TASK_PHASES, modelsForPhase, switchCommands, type ResolvedModelRule } from './switch.ts'
+import { TASK_PHASES, isSwitchableModelName, modelsForPhase, switchCommands, type ResolvedModelRule } from './switch.ts'
 import { integrationOrder, nextBatch, type WorktreeManager } from './worktree.ts'
 
 /**
@@ -115,8 +115,14 @@ function registerAgentSwitch(ctx: Context, deps: OrchestrationDeps): void {
       if (candidates.length === 0) {
         throw new Error('supervisor_agent_switch needs a model, or a phase a configured model rule covers')
       }
+      const usable = candidates.filter(isSwitchableModelName)
+      if (usable.length === 0) {
+        throw new Error('supervisor_agent_switch got no usable model name ('
+          + candidates.map(model => JSON.stringify(model)).join(', ')
+          + '): a switch model must be a single line without control characters')
+      }
       const template = session.agentKind === undefined ? undefined : deps.runtime.config.agentTemplates[session.agentKind]
-      const commands = switchCommands(template?.modelSwitchCommand, candidates)
+      const commands = switchCommands(template?.modelSwitchCommand, usable)
       const attempted: string[] = []
       let lastAttempt: SwitchAttempt | undefined
       for (const command of commands) {

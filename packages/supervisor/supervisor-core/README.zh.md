@@ -45,7 +45,7 @@ profile 补丁按行 id `supervisor` 定位并**整份替换** `config`，因此
 | `worktreeBase` | `.worktrees` | 各子任务 worktree 的创建位置；相对路径相对 `workspaceDir` 解析。编排组件会读取它。 |
 | `agents` | 内置模板 | 各 Agent 类型的 `startCommand`、`resumeCommand` 与 `modelSwitchCommand`，在 `claude-code`、`codex`、`kimi-code`、`qwen-code`、`trae`、`dsh` 的默认值之上合并。 |
 | `defaultProfile` | `headless` | 替换 `{profile}` 的值，`dsh` 模板会用到。 |
-| `shellQuoting` | `posix`（Windows 上为 `powershell`） | 用于引用被替换的 `{prompt}` 与额外参数的方言。 |
+| `shellQuoting` | `posix`（Windows 上为 `powershell`） | 用于引用被替换的 `{model}`、`{prompt}`、`{profile}` 与额外参数的方言。 |
 | `rules` | 全部内置规则 | 每条规则的 `enabled`、`severity`，以及 `goal-drift-signal` 的字面量 `keywords`。 |
 | `detection` | 见下 | 窗口规则的阈值，以及 `context-bloat` 的 `contextBloatBytes` 上界。 |
 | `breaker` | `noProgressLimit` 2、`openLimit` 3、`cooldownSec` 300 | 每会话的进度熔断上限；`openLimit` 不得小于 `noProgressLimit`。 |

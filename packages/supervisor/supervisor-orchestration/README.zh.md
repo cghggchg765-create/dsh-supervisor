@@ -66,7 +66,7 @@ profile 补丁按行 id `supervisor-orchestration` 定位并**整份替换** `co
 
 ### 按阶段切换模型
 
-`switch.ts` 在加载时校验 `modelRules`，并把每个阶段解析为候选模型列表（最优先在前）。`switchCommands` 为每个候选渲染一次被托管 CLI 的 `modelSwitchCommand`——`{model}` 是唯一占位符，内部空白会被折叠，空白或重复的命令会被丢弃——工具按顺序发送每个候选，只有结算带有 `model-switch-fail` L1 命中时才继续下一个。模板为空或缺失时不产生任何命令，此时结果会说明必须用候选模型重新启动该 CLI。
+`switch.ts` 在加载时校验 `modelRules`，并把每个阶段解析为候选模型列表（最优先在前）。`switchCommands` 为每个候选渲染一次被托管 CLI 的 `modelSwitchCommand`——`{model}` 是唯一占位符，内部空白会被折叠，空白或含控制字符的候选会被跳过，重复的命令会被丢弃——工具按顺序发送每个候选，只有结算带有 `model-switch-fail` L1 命中时才继续下一个。模板为空或缺失时不产生任何命令，此时结果会说明必须用候选模型重新启动该 CLI。
 
 ### 技能清单
 

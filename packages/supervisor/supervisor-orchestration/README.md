@@ -66,7 +66,7 @@ A profile patch targets the row id `supervisor-orchestration` and replaces the w
 
 ### Model switching by phase
 
-`switch.ts` validates `modelRules` at load and resolves each phase to its candidate models, most preferred first. `switchCommands` renders the hosted CLI's `modelSwitchCommand` once per candidate — `{model}` is the only placeholder, internal whitespace is collapsed, and blank or duplicate commands are dropped — and the tool sends each candidate in turn, advancing only when the settlement carries a `model-switch-fail` L1 hit. An empty or missing template yields no commands, and the result then says the CLI must be relaunched with the candidate model instead.
+`switch.ts` validates `modelRules` at load and resolves each phase to its candidate models, most preferred first. `switchCommands` renders the hosted CLI's `modelSwitchCommand` once per candidate — `{model}` is the only placeholder, internal whitespace is collapsed, candidates that are blank or carry control characters are skipped, and duplicate commands are dropped — and the tool sends each candidate in turn, advancing only when the settlement carries a `model-switch-fail` L1 hit. An empty or missing template yields no commands, and the result then says the CLI must be relaunched with the candidate model instead.
 
 ### Skill inventories
 

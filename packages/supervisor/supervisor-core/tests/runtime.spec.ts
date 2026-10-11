@@ -195,7 +195,7 @@ describe('launch command rendering', () => {
       { prompt: 'do the thing', profile: 'headless' },
       'posix',
     )
-    expect(rendered).toBe("dsh --profile headless 'do the thing'")
+    expect(rendered).toBe("dsh --profile 'headless' 'do the thing'")
   })
 
   it('drops an absent model without leaving a double space', () => {

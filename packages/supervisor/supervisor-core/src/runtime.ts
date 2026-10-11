@@ -115,8 +115,9 @@ export interface ResolvedConfig {
 }
 
 /**
- * Built-in launch templates. `{prompt}` is substituted as one quoted argument
- * by {@link quote}; the templates therefore carry no quotes of their own.
+ * Built-in launch templates. Every substituted value — `{model}`, `{prompt}`,
+ * and `{profile}` — is quoted by {@link quote}; the templates therefore carry
+ * no quotes of their own.
  */
 export const DEFAULT_AGENT_TEMPLATES: Record<AgentKind, AgentTemplate> = {
   'claude-code': {
@@ -316,10 +317,13 @@ export function quote(value: string, quoting: ShellQuoting): string {
 }
 
 /**
- * Substitute a launch template's placeholders.
+ * Substitute a launch template's placeholders. Every substituted value — model,
+ * prompt, and profile — is quoted for the configured shell dialect, so a value
+ * can never split into extra shell words or commands. An empty model or profile
+ * substitutes as nothing, so an absent value leaves no empty shell argument.
  * @param template - configured command template.
  * @param values - model, prompt, and profile values.
- * @param quoting - shell dialect used to quote the prompt.
+ * @param quoting - shell dialect used to quote the substituted values.
  * @returns the command text to send to the terminal.
  */
 export function renderCommand(
@@ -327,10 +331,11 @@ export function renderCommand(
   values: { model?: string; prompt: string; profile: string },
   quoting: ShellQuoting,
 ): string {
+  const quoted = (value: string): string => (value === '' ? '' : quote(value, quoting))
   return template
-    .replaceAll('{model}', values.model ?? '')
+    .replaceAll('{model}', quoted(values.model ?? ''))
     .replaceAll('{prompt}', quote(values.prompt, quoting))
-    .replaceAll('{profile}', values.profile)
+    .replaceAll('{profile}', quoted(values.profile))
     .replaceAll(/\s+/g, ' ')
     .trim()
 }

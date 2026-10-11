@@ -397,7 +397,7 @@ describe('supervised terminal round trip', () => {
     })
     expect(result.isError).toBe(false)
     const value = result.value as { command: string; sessionId: string; stateMarks: string[] }
-    expect(value.command).toContain('codex exec --model gpt-5 --skip-git-repo-check')
+    expect(value.command).toContain("codex exec --model 'gpt-5' --skip-git-repo-check")
     expect(value.command).toContain('ship the fix')
     expect(value.sessionId).toBe(sessionId)
     expect(value.stateMarks.length).toBeGreaterThan(0)
